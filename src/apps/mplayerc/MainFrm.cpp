@@ -7906,7 +7906,7 @@ void CMainFrame::OnViewRotate(UINT nID)
 			}
 
 			CString info;
-			info.Format(L"Rotation: %d°", rotation);
+			info.Format(L"Rotation: %dï¿½", rotation);
 			SendStatusMessage(info, 3000);
 		}
 	}
@@ -11624,6 +11624,16 @@ void CMainFrame::ZoomVideoWindow(bool snap, double scale)
 		if (m_bAudioOnly) {
 			scale = 1.0;
 			videoSize = m_wndView.GetLogoSize();
+			const int coverLimit = s.nCoverArtSizeLimit;
+			if (coverLimit > 0 && (videoSize.cx > coverLimit || videoSize.cy > coverLimit)) {
+				if (videoSize.cx >= videoSize.cy) {
+					videoSize.cy = MulDiv(videoSize.cy, coverLimit, videoSize.cx);
+					videoSize.cx = coverLimit;
+				} else {
+					videoSize.cx = MulDiv(videoSize.cx, coverLimit, videoSize.cy);
+					videoSize.cy = coverLimit;
+				}
+			}
 			videoSize.cx = std::max(videoSize.cx, (LONG)DEFCLIENTW);
 			videoSize.cy = std::max(videoSize.cy, (LONG)DEFCLIENTH);
 		} else {

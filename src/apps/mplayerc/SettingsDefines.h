@@ -123,7 +123,7 @@
 #define IDS_RS_WEBSERVERCGI					L"CGIHandlers"
 #define IDS_RS_WEBDEFINDEX					L"DefaultPage"
 
-// ÎnlineServices
+// ï¿½nlineServices
 #define IDS_R_ONLINESERVICES				L"OnlineServices"
 #define IDS_R_YOUTUBECACHE					L"OnlineServices\\YoutubeCache"
 #define IDS_RS_YOUTUBE_LOAD_PLAYLIST		L"YoutubeLoadPlaylist"
@@ -262,6 +262,7 @@
 #define IDS_RS_SUBDELAYINTERVAL				L"SubDelayInterval"
 #define IDS_RS_LOGOFILE						L"LogoFile"
 #define IDS_RS_AUDIOWINDOWMODE				L"AudioWindowMode"
+#define IDS_RS_COVER_ART_SIZE_LIMIT			L"CoverArtSizeLimit"
 #define IDS_RS_ADDSIMILARFILES				L"AddSimilarFiles"
 #define IDS_RS_ENABLEWORKERTHREADFOROPENING	L"EnableWorkerThreadForOpening"
 #define IDS_RS_AUTOLOADAUDIO				L"AutoloadAudio"

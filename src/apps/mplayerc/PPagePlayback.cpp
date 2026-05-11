@@ -58,6 +58,7 @@ void CPPagePlayback::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK7, m_fEnableWorkerThreadForOpening);
 	DDX_Check(pDX, IDC_CHECK6, m_fReportFailedPins);
 	DDX_Check(pDX, IDC_CHECK8, m_bRememberSelectedTracks);
+	DDX_Text(pDX, IDC_EDIT_COVER_ART_SIZE, m_nCoverArtSizeLimit);
 
 	DDX_Check(pDX, IDC_CHECK3, m_bFastSeek);
 	DDX_Check(pDX, IDC_CHECK5, m_bPauseMinimizedVideo);
@@ -120,6 +121,8 @@ BOOL CPPagePlayback::OnInitDialog()
 	m_fReportFailedPins = s.fReportFailedPins;
 	m_bRememberSelectedTracks = s.bRememberSelectedTracks;
 
+	m_nCoverArtSizeLimit = s.nCoverArtSizeLimit;
+
 	m_bFastSeek = s.fFastSeek;
 	m_bPauseMinimizedVideo = s.bPauseMinimizedVideo;
 
@@ -154,6 +157,7 @@ BOOL CPPagePlayback::OnApply()
 	s.fUseInternalSelectTrackLogic = !!m_fUseInternalSelectTrackLogic;
 
 	s.bRememberSelectedTracks = !!m_bRememberSelectedTracks;
+	s.nCoverArtSizeLimit = std::max(0, m_nCoverArtSizeLimit);
 
 	s.fFastSeek = !!m_bFastSeek;
 	s.bPauseMinimizedVideo = !!m_bPauseMinimizedVideo;

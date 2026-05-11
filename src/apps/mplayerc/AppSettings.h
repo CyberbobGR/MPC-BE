@@ -582,6 +582,7 @@ public:
 	CStringW		strAudiosLanguageOrder;
 	bool			bRememberSelectedTracks;
 	int				nAudioWindowMode;
+	int				nCoverArtSizeLimit;
 	int				nAddSimilarFiles;
 	bool			fEnableWorkerThreadForOpening;
 	bool			fReportFailedPins;
