@@ -375,7 +375,7 @@ BOOL CID3Tag::ReadTagsV2(BYTE *buf, size_t len)
 		if (tag == 'TIT2'
 				|| tag == 'TPE1'
 				|| tag == 'TALB' || tag == '\0TAL'
-				|| tag == 'TYER'
+				|| tag == 'TYER' || tag == 'TDRC'
 				|| tag == 'COMM'
 				|| tag == 'TRCK'
 				|| tag == 'TCOP'
@@ -583,6 +583,8 @@ void SetID3TagProperties(IBaseFilter* pBF, const CID3Tag* pID3tag)
 		}
 		if (Lookup('TYER', str) && !str.IsEmpty()) {
 			pPB->SetProperty(L"YEAR", str);
+		} else if (Lookup('TDRC', str) && !str.IsEmpty()) {
+			pPB->SetProperty(L"YEAR", str.Left(4));
 		}
 
 		if (author.IsEmpty() && (Lookup('TPE1', str) || Lookup('\0TP1', str))) {

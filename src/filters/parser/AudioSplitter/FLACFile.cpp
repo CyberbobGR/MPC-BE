@@ -58,15 +58,13 @@ void CFLACFile::SetProperties(IBaseFilter* pBF)
 {
 	if (m_info.got_vorbis_comments) {
 		if (CComQIPtr<IDSMPropertyBag> pPB = pBF) {
-			CString title = m_info.title;
-			if (!title.IsEmpty() && !m_info.year.IsEmpty()) {
-				title += L" (" + m_info.year + L")";
-			}
-
-			pPB->SetProperty(L"TITL", title);
+			pPB->SetProperty(L"TITL", m_info.title);
 			pPB->SetProperty(L"AUTH", m_info.artist);
 			pPB->SetProperty(L"DESC", m_info.comment);
 			pPB->SetProperty(L"ALBUM", m_info.album);
+			if (!m_info.year.IsEmpty()) {
+				pPB->SetProperty(L"YEAR", m_info.year);
+			}
 		}
 	}
 

@@ -138,6 +138,7 @@ static const std::pair<CStringW, CStringW> tags[] = {
 	{ L"DESCRIPTION",            L"DESC"  },
 	{ L"ENCODER",                L"DESC"  },
 	{ L"ALBUM",                  L"ALBUM" },
+	{ L"DATE",                   L"YEAR"  },
 	{ L"METADATA_BLOCK_PICTURE", L""      }
 };
 

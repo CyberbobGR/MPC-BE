@@ -13542,35 +13542,33 @@ void CMainFrame::OpenSetupInfoBar()
 			filled = true;
 		}
 
-		// Year: try IDSMPropertyBag (MP3/FLAC/Matroska etc.) then IWMHeaderInfo (WMA)
+		// Year: try IDSMPropertyBag (MP3/FLAC/OGG/Matroska etc.) then IWMHeaderInfo (WMA)
 		m_strYear.Empty();
 		if (m_pGB) {
 			BeginEnumFilters(m_pGB, pEF, pBF) {
-				if (!CheckMainFilter(pBF)) {
-					continue;
-				}
-
-				if (CComQIPtr<IDSMPropertyBag> pPB = pBF.p) {
-					CComBSTR bstrYear;
-					if (SUCCEEDED(pPB->GetProperty(L"YEAR", &bstrYear)) && bstrYear.Length()) {
-						m_strYear = CString(bstrYear);
-					} else if (SUCCEEDED(pPB->GetProperty(L"DATE", &bstrYear)) && bstrYear.Length()) {
-						m_strYear = CString(bstrYear);
-					}
-					break;
-				}
-
-				if (CComQIPtr<IWMHeaderInfo> pWMHI = pBF.p) {
-					WORD streamNum = 0;
-					WMT_ATTR_DATATYPE type;
-					WORD length;
-					if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, nullptr, &length))
-							&& type == WMT_TYPE_STRING && length > sizeof(wchar_t)) {
-						std::vector<BYTE> value(length);
-						if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, value.data(), &length))) {
-							m_strYear = CStringW((LPCWSTR)value.data(), length / sizeof(wchar_t));
+				if (m_strYear.IsEmpty()) {
+					if (CComQIPtr<IDSMPropertyBag> pPB = pBF.p) {
+						CComBSTR bstr;
+						if (SUCCEEDED(pPB->GetProperty(L"YEAR", &bstr)) && bstr.Length()) {
+							m_strYear = CString(bstr);
 						}
 					}
+				}
+				if (m_strYear.IsEmpty()) {
+					if (CComQIPtr<IWMHeaderInfo> pWMHI = pBF.p) {
+						WORD streamNum = 0;
+						WMT_ATTR_DATATYPE type;
+						WORD length;
+						if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, nullptr, &length))
+								&& type == WMT_TYPE_STRING && length > sizeof(wchar_t)) {
+							std::vector<BYTE> value(length);
+							if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, value.data(), &length))) {
+								m_strYear = CStringW((LPCWSTR)value.data(), length / sizeof(wchar_t));
+							}
+						}
+					}
+				}
+				if (!m_strYear.IsEmpty()) {
 					break;
 				}
 			}
