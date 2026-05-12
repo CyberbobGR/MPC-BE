@@ -1806,6 +1806,7 @@
 #define IDS_AG_WINDOW_TO_PRIMARYSCREEN  44102
 #define IDS_EXTERNAL                    44103
 #define IDS_SUB_SAVE_EXTERNAL_STYLE_FILE 44104
+#define IDC_EDIT_COVER_ART_SIZE         22054
 
 // Next default values for new objects
 //
@@ -1813,7 +1814,6 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        44105
 #define _APS_NEXT_COMMAND_VALUE         1204
-#define IDC_EDIT_COVER_ART_SIZE         22054
 #define _APS_NEXT_CONTROL_VALUE         22055
 #define _APS_NEXT_SYMED_VALUE           24044
 #endif
