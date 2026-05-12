@@ -13542,6 +13542,7 @@ void CMainFrame::RefreshAdaptiveTheme()
 	m_wndSeekBar.Invalidate();
 	m_wndInfoBar.Invalidate(TRUE);
 	m_wndToolBar.SetColor();
+	m_wndToolBar.m_volctrl.m_nUseDarkTheme = 1;
 	m_wndToolBar.Invalidate();
 	m_wndStatusBar.Invalidate();
 	SetColorTitle();

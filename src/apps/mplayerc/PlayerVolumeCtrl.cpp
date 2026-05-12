@@ -131,7 +131,6 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 				const bool bAdaptive = s.bAdaptiveTheme && pMainFrame && pMainFrame->m_bCoverArtThemeValid;
 				if (s.bUseDarkTheme && (m_bmUnderCtrl.GetSafeHandle() == nullptr
 						|| m_nUseDarkTheme == 1
-						|| bAdaptive
 						|| m_nThemeBrightness != s.nThemeBrightness
 						|| m_nThemeRed != s.nThemeRed
 						|| m_nThemeGreen != s.nThemeGreen
