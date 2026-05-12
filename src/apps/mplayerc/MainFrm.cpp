@@ -11623,7 +11623,14 @@ void CMainFrame::ZoomVideoWindow(bool snap, double scale)
 		CSize videoSize = GetVideoSize();
 		if (m_bAudioOnly) {
 			scale = 1.0;
-			videoSize = m_wndView.GetLogoSize();
+			// Use actual cover art size when available; fall back to the Options logo size
+			if (m_pMainBitmap) {
+				UINT w = 0, h = 0;
+				m_pMainBitmap->GetSize(&w, &h);
+				videoSize = CSize((LONG)w, (LONG)h);
+			} else {
+				videoSize = m_wndView.GetLogoSize();
+			}
 			const int coverLimit = s.nCoverArtSizeLimit;
 			if (coverLimit > 0 && (videoSize.cx > coverLimit || videoSize.cy > coverLimit)) {
 				if (videoSize.cx >= videoSize.cy) {
