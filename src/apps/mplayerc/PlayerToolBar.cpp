@@ -574,7 +574,11 @@ void CPlayerToolBar::OnCustomDraw(NMHDR *pNMHDR, LRESULT *pResult)
 				CRect r;
 				GetClientRect(&r);
 
-				if (m_pMainFrame->m_BackGroundGradient.Size()) {
+				if (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid) {
+					tvBackground[0].x = r.left; tvBackground[0].y = r.top;
+					tvBackground[1].x = r.right; tvBackground[1].y = r.bottom;
+					dc.GradientFill(tvBackground, 2, &gr, 1, GRADIENT_FILL_RECT_V);
+				} else if (m_pMainFrame->m_BackGroundGradient.Size()) {
 					m_pMainFrame->m_BackGroundGradient.Paint(&dc, r, 21, s.nThemeBrightness, m_crBackground.R, m_crBackground.G, m_crBackground.B);
 				} else {
 					tvBackground[0].x = r.left; tvBackground[0].y = r.top;
@@ -640,7 +644,11 @@ void CPlayerToolBar::OnCustomDraw(NMHDR *pNMHDR, LRESULT *pResult)
 			for (size_t j = 0; j < std::size(sep); j++) {
 				GetItemRect(sep[j], &r);
 
-				if (m_pMainFrame->m_BackGroundGradient.Size()) {
+				if (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid) {
+					tvBackground[0].x = r.left; tvBackground[0].y = r.top;
+					tvBackground[1].x = r.right; tvBackground[1].y = r.bottom;
+					dc.GradientFill(tvBackground, 2, &gr, 1, GRADIENT_FILL_RECT_V);
+				} else if (m_pMainFrame->m_BackGroundGradient.Size()) {
 					m_pMainFrame->m_BackGroundGradient.Paint(&dc, r, 21, s.nThemeBrightness, m_crBackground.R, m_crBackground.G, m_crBackground.B);
 				} else {
 					tvBackground[0].x = r.left; tvBackground[0].y = r.top;

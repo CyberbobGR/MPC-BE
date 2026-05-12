@@ -127,8 +127,11 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 	if (m_bSelfDrawn) {
 		switch (pNMCD->dwDrawStage) {
 			case CDDS_PREPAINT:
+				CMainFrame* pMainFrame = AfxGetMainFrame();
+				const bool bAdaptive = s.bAdaptiveTheme && pMainFrame && pMainFrame->m_bCoverArtThemeValid;
 				if (s.bUseDarkTheme && (m_bmUnderCtrl.GetSafeHandle() == nullptr
 						|| m_nUseDarkTheme == 1
+						|| bAdaptive
 						|| m_nThemeBrightness != s.nThemeBrightness
 						|| m_nThemeRed != s.nThemeRed
 						|| m_nThemeGreen != s.nThemeGreen
@@ -142,7 +145,15 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 					GetClientRect(&r);
 					InvalidateRect(&r);
 
-					if (m_BackGroundGradient.Size()) {
+					if (bAdaptive) {
+						const COLORREF c1 = pMainFrame->m_coverArtTheme.clrBg1;
+						const COLORREF c2 = pMainFrame->m_coverArtTheme.clrBg2;
+						TRIVERTEX tv[2] = {
+							{ r.left, r.top, COLOR16(GetRValue(c1) * 256), COLOR16(GetGValue(c1) * 256), COLOR16(GetBValue(c1) * 256), 255 * 256 },
+							{ r.Width(), r.Height(), COLOR16(GetRValue(c2) * 256), COLOR16(GetGValue(c2) * 256), COLOR16(GetBValue(c2) * 256), 255 * 256 },
+						};
+						dc.GradientFill(tv, 2, &gr, 1, GRADIENT_FILL_RECT_V);
+					} else if (m_BackGroundGradient.Size()) {
 						ThemeRGB(s.nThemeRed, s.nThemeGreen, s.nThemeBlue, R, G, B);
 						m_BackGroundGradient.Paint(&dc, r, 22, s.nThemeBrightness, R, G, B);
 					} else {
