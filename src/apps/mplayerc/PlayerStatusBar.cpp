@@ -359,7 +359,16 @@ void CPlayerStatusBar::OnPaint()
 		// background
 		int R, G, B;
 
-		if (m_pMainFrame->m_BackGroundGradient.Size()) {
+		if (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid) {
+			const COLORREF c1 = m_pMainFrame->m_coverArtTheme.clrBg1;
+			const COLORREF c2 = m_pMainFrame->m_coverArtTheme.clrBg2;
+			GRADIENT_RECT gr = {0, 1};
+			TRIVERTEX tv[2] = {
+				{r.left, r.top, COLOR16(GetRValue(c1) * 256), COLOR16(GetGValue(c1) * 256), COLOR16(GetBValue(c1) * 256), 255 * 256},
+				{r.right, r.bottom, COLOR16(GetRValue(c2) * 256), COLOR16(GetGValue(c2) * 256), COLOR16(GetBValue(c2) * 256), 255 * 256},
+			};
+			memdc.GradientFill(tv, 2, &gr, 1, GRADIENT_FILL_RECT_V);
+		} else if (m_pMainFrame->m_BackGroundGradient.Size()) {
 			ThemeRGB(s.nThemeRed, s.nThemeGreen, s.nThemeBlue, R, G, B);
 			m_pMainFrame->m_BackGroundGradient.Paint(&dc, r, 55, s.nThemeBrightness, R, G, B);
 		} else {
@@ -388,7 +397,8 @@ void CPlayerStatusBar::OnPaint()
 		memdc.MoveTo(r.left, r.top + 3);
 		memdc.LineTo(r.right, r.top + 3);
 
-		memdc.SetTextColor(ThemeRGB(165, 170, 175));
+		memdc.SetTextColor((s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid)
+			? RGB(210, 210, 215) : ThemeRGB(165, 170, 175));
 
 		// texts
 		memdc.SelectObject(&m_font);

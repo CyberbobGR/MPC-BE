@@ -13541,6 +13541,10 @@ void CMainFrame::RefreshAdaptiveTheme()
 	m_wndView.Invalidate();
 	m_wndSeekBar.Invalidate();
 	m_wndInfoBar.Invalidate(TRUE);
+	m_wndToolBar.SetColor();
+	m_wndToolBar.Invalidate();
+	m_wndStatusBar.Invalidate();
+	SetColorTitle();
 }
 
 void CMainFrame::RefreshYearInfoBar()
@@ -20934,7 +20938,9 @@ void CMainFrame::SetColorTitle(const bool bSystemOnly/* = false*/)
 		const auto& s = AfxGetAppSettings();
 		if (s.bUseDarkTheme && s.bDarkTitle) {
 			if (!bSystemOnly) {
-				m_colTitleBk = ThemeRGB(45, 50, 55);
+				m_colTitleBk = (s.bAdaptiveTheme && m_bCoverArtThemeValid)
+					? m_coverArtTheme.clrBg2
+					: ThemeRGB(45, 50, 55);
 				DwmSetWindowAttribute(m_hWnd, 35 /*DWMWA_CAPTION_COLOR*/, &m_colTitleBk, sizeof(m_colTitleBk));
 			}
 		} else {

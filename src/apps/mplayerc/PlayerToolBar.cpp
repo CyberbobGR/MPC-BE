@@ -489,7 +489,12 @@ void CPlayerToolBar::SetColor()
 	if (s.bUseDarkTheme) {
 		int R, G, B;
 
-		if (m_pMainFrame->m_BackGroundGradient.Size()) {
+		if (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid) {
+			const COLORREF c1 = m_pMainFrame->m_coverArtTheme.clrBg1;
+			const COLORREF c2 = m_pMainFrame->m_coverArtTheme.clrBg2;
+			tvBackground[0] = { 0, 0, COLOR16(GetRValue(c1) * 256), COLOR16(GetGValue(c1) * 256), COLOR16(GetBValue(c1) * 256), 255 * 256 };
+			tvBackground[1] = { 0, 0, COLOR16(GetRValue(c2) * 256), COLOR16(GetGValue(c2) * 256), COLOR16(GetBValue(c2) * 256), 255 * 256 };
+		} else if (m_pMainFrame->m_BackGroundGradient.Size()) {
 			ThemeRGB(s.nThemeRed, s.nThemeGreen, s.nThemeBlue, m_crBackground.R, m_crBackground.G, m_crBackground.B);
 		} else {
 			ThemeRGB(50, 55, 60, R, G, B);
