@@ -160,7 +160,15 @@ BOOL CPPagePlayback::OnApply()
 
 	s.bRememberSelectedTracks = !!m_bRememberSelectedTracks;
 	s.nCoverArtSizeLimit = std::max(0, m_nCoverArtSizeLimit);
+
+	bool bYearChanged = s.bShowYearInInfoBar != !!m_bShowYearInInfoBar;
 	s.bShowYearInInfoBar = !!m_bShowYearInInfoBar;
+	if (bYearChanged) {
+		CMainFrame* pMainFrm = AfxGetMainFrame();
+		if (pMainFrm && pMainFrm->IsSomethingLoaded()) {
+			pMainFrm->OpenSetupInfoBar();
+		}
+	}
 
 	s.fFastSeek = !!m_bFastSeek;
 	s.bPauseMinimizedVideo = !!m_bPauseMinimizedVideo;

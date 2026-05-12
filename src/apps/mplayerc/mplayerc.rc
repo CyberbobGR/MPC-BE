@@ -2773,7 +2773,7 @@ BEGIN
     IDS_SUBTITLES_ENABLE    "&Enable"
     IDS_PANSCAN_EDIT        "Edit..."
     IDS_INFOBAR_TITLE       "Title"
-    IDS_INFOBAR_AUTHOR      "Author"
+    IDS_INFOBAR_AUTHOR      "Artist"
     IDS_INFOBAR_COPYRIGHT   "Copyright"
     IDS_INFOBAR_RATING      "Rating"
     IDS_INFOBAR_DESCRIPTION "Description"
