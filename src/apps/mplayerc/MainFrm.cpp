@@ -13427,6 +13427,21 @@ void CMainFrame::OpenSetupCaptureBar()
 		m_wndCaptureBar.m_capdlg.m_fAudPreview, false);
 }
 
+void CMainFrame::RefreshYearInfoBar()
+{
+	const CAppSettings& s = AfxGetAppSettings();
+	if (m_bAudioOnly && s.bShowYearInInfoBar && !m_strYear.IsEmpty()) {
+		m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), m_strYear);
+		CString title = GetTitleOrFileNameOrPath();
+		m_strTitleWithYear.Format(L"%s (%s)", title, m_strYear);
+	} else {
+		m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), L"");
+		m_strTitleWithYear.Empty();
+	}
+	RecalcLayout();
+	m_wndSeekBar.Invalidate();
+}
+
 void CMainFrame::OpenSetupInfoBar()
 {
 	m_wndInfoBar.RemoveAllLines();

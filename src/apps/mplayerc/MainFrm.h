@@ -685,6 +685,7 @@ public:
 	bool ResetDevice();
 	bool DisplayChange();
 	void CloseMedia(BOOL bNextIsOpened = FALSE);
+	void RefreshYearInfoBar();
 	void StartTunerScan(std::unique_ptr<TunerScanData>& pTSD);
 	void StopTunerScan();
 
