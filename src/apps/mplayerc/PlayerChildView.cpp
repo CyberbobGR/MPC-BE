@@ -309,7 +309,25 @@ BOOL CChildView::OnEraseBkgnd(CDC* pDC)
 		}
 	}
 
-	pDC->FillSolidRect(r, bkcolor);
+	const CAppSettings& s = AfxGetAppSettings();
+	if (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid) {
+		const CMainFrame::CoverArtTheme& theme = m_pMainFrame->m_coverArtTheme;
+		TRIVERTEX tvBg[2];
+		tvBg[0].x = r.left;  tvBg[0].y = r.top;
+		tvBg[0].Red   = COLOR16(GetRValue(theme.clrBg1) * 256);
+		tvBg[0].Green = COLOR16(GetGValue(theme.clrBg1) * 256);
+		tvBg[0].Blue  = COLOR16(GetBValue(theme.clrBg1) * 256);
+		tvBg[0].Alpha = 0;
+		tvBg[1].x = r.right; tvBg[1].y = r.bottom;
+		tvBg[1].Red   = COLOR16(GetRValue(theme.clrBg2) * 256);
+		tvBg[1].Green = COLOR16(GetGValue(theme.clrBg2) * 256);
+		tvBg[1].Blue  = COLOR16(GetBValue(theme.clrBg2) * 256);
+		tvBg[1].Alpha = 0;
+		GRADIENT_RECT gr = { 0, 1 };
+		pDC->GradientFill(tvBg, 2, &gr, 1, GRADIENT_FILL_RECT_V);
+	} else {
+		pDC->FillSolidRect(r, bkcolor);
+	}
 
 	return TRUE;
 }

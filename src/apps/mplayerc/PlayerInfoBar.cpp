@@ -214,7 +214,11 @@ BOOL CPlayerInfoBar::OnEraseBkgnd(CDC* pDC)
 		pDC->SelectObject(&penSaved);
 
 		r.DeflateRect(0, 1, 0, 0);
-		pDC->FillSolidRect(&r, ThemeRGB(5, 10, 15));
+		const CAppSettings& s = AfxGetAppSettings();
+		COLORREF panelBg = (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid)
+			? m_pMainFrame->m_coverArtTheme.clrPanelBg
+			: ThemeRGB(5, 10, 15);
+		pDC->FillSolidRect(&r, panelBg);
 	} else {
 		pDC->Draw3dRect(&r, GetSysColor(COLOR_3DSHADOW), GetSysColor(COLOR_3DHILIGHT));
 

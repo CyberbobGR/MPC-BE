@@ -86,13 +86,21 @@ void CStatusLabel::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	const CAppSettings& s = AfxGetAppSettings();
 
-	if (s.bUseDarkTheme) {
-		dc.SetTextColor(ThemeRGB(165, 170, 175));
-		dc.SetBkColor(ThemeRGB(5, 10, 15));
+	CMainFrame* pMainFrame = AfxGetMainFrame();
+	const bool bAdaptive = s.bAdaptiveTheme && pMainFrame && pMainFrame->m_bCoverArtThemeValid;
+	COLORREF clrBg, clrText;
+	if (bAdaptive) {
+		clrBg   = pMainFrame->m_coverArtTheme.clrPanelBg;
+		clrText = RGB(220, 220, 225);
+	} else if (s.bUseDarkTheme) {
+		clrBg   = ThemeRGB(5, 10, 15);
+		clrText = ThemeRGB(165, 170, 175);
 	} else {
-		dc.SetTextColor(0xffffff);
-		dc.SetBkColor(0);
+		clrBg   = 0;
+		clrText = 0xffffff;
 	}
+	dc.SetTextColor(clrText);
+	dc.SetBkColor(clrBg);
 
 	UINT format = DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
 	if (m_fAddEllipses) {
@@ -105,7 +113,7 @@ void CStatusLabel::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	}
 
 	dc.SelectObject(&old);
-	dc.FillSolidRect(&rc, s.bUseDarkTheme ? ThemeRGB(5, 10, 15) : 0);
+	dc.FillSolidRect(&rc, clrBg);
 	dc.DrawTextW(str, &rc, format);
 
 	dc.Detach();

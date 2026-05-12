@@ -60,6 +60,7 @@ void CPPagePlayback::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK8, m_bRememberSelectedTracks);
 	DDX_Text(pDX, IDC_EDIT_COVER_ART_SIZE, m_nCoverArtSizeLimit);
 	DDX_Check(pDX, IDC_CHECK_SHOW_YEAR, m_bShowYearInInfoBar);
+	DDX_Check(pDX, IDC_CHECK_ADAPTIVE_THEME, m_bAdaptiveTheme);
 
 	DDX_Check(pDX, IDC_CHECK3, m_bFastSeek);
 	DDX_Check(pDX, IDC_CHECK5, m_bPauseMinimizedVideo);
@@ -124,6 +125,7 @@ BOOL CPPagePlayback::OnInitDialog()
 
 	m_nCoverArtSizeLimit = s.nCoverArtSizeLimit;
 	m_bShowYearInInfoBar = s.bShowYearInInfoBar;
+	m_bAdaptiveTheme = s.bAdaptiveTheme;
 
 	m_bFastSeek = s.fFastSeek;
 	m_bPauseMinimizedVideo = s.bPauseMinimizedVideo;
@@ -163,6 +165,9 @@ BOOL CPPagePlayback::OnApply()
 
 	s.bShowYearInInfoBar = !!m_bShowYearInInfoBar;
 	AfxGetMainFrame()->RefreshYearInfoBar();
+
+	s.bAdaptiveTheme = !!m_bAdaptiveTheme;
+	AfxGetMainFrame()->RefreshAdaptiveTheme();
 
 	s.fFastSeek = !!m_bFastSeek;
 	s.bPauseMinimizedVideo = !!m_bPauseMinimizedVideo;

@@ -478,6 +478,15 @@ private:
 	CString			m_strYear;
 	CString			m_strTitleWithYear;
 
+	struct CoverArtTheme {
+		COLORREF clrBg1     = RGB(18, 18, 22);
+		COLORREF clrBg2     = RGB(8,  8,  10);
+		COLORREF clrAccent  = RGB(80, 80, 110);
+		COLORREF clrPanelBg = RGB(26, 26, 32);
+	};
+	CoverArtTheme	m_coverArtTheme;
+	bool			m_bCoverArtThemeValid = false;
+
 	CString					m_LastOpenFile;
 	std::unique_ptr<OpenMediaData> m_lastOMD;
 
@@ -686,6 +695,7 @@ public:
 	bool DisplayChange();
 	void CloseMedia(BOOL bNextIsOpened = FALSE);
 	void RefreshYearInfoBar();
+	void RefreshAdaptiveTheme();
 	void StartTunerScan(std::unique_ptr<TunerScanData>& pTSD);
 	void StopTunerScan();
 

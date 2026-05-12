@@ -264,6 +264,7 @@
 #define IDS_RS_AUDIOWINDOWMODE				L"AudioWindowMode"
 #define IDS_RS_COVER_ART_SIZE_LIMIT			L"CoverArtSizeLimit"
 #define IDS_RS_SHOW_YEAR					L"ShowYear"
+#define IDS_RS_ADAPTIVE_THEME				L"AdaptiveTheme"
 #define IDS_RS_ADDSIMILARFILES				L"AddSimilarFiles"
 #define IDS_RS_ENABLEWORKERTHREADFOROPENING	L"EnableWorkerThreadForOpening"
 #define IDS_RS_AUTOLOADAUDIO				L"AutoloadAudio"

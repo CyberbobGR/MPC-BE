@@ -486,6 +486,7 @@ void CAppSettings::ResetSettings()
 	nAudioWindowMode = 1;
 	nCoverArtSizeLimit = 600;
 	bShowYearInInfoBar = true;
+	bAdaptiveTheme = false;
 	nAddSimilarFiles = 0;
 	fEnableWorkerThreadForOpening = true;
 	fReportFailedPins = true;
@@ -888,6 +889,7 @@ void CAppSettings::LoadSettings(bool bForce/* = false*/)
 	profile.ReadInt(IDS_R_SETTINGS, IDS_RS_AUDIOWINDOWMODE, nAudioWindowMode, 0, 2);
 	profile.ReadInt(IDS_R_SETTINGS, IDS_RS_COVER_ART_SIZE_LIMIT, nCoverArtSizeLimit, 0, INT_MAX);
 	profile.ReadBool(IDS_R_SETTINGS, IDS_RS_SHOW_YEAR, bShowYearInInfoBar);
+	profile.ReadBool(IDS_R_SETTINGS, IDS_RS_ADAPTIVE_THEME, bAdaptiveTheme);
 	profile.ReadInt(IDS_R_SETTINGS, IDS_RS_ADDSIMILARFILES, nAddSimilarFiles, 0, 2);
 	profile.ReadBool(IDS_R_SETTINGS, IDS_RS_ENABLEWORKERTHREADFOROPENING, fEnableWorkerThreadForOpening);
 	profile.ReadBool(IDS_R_SETTINGS, IDS_RS_REPORTFAILEDPINS, fReportFailedPins);
@@ -1668,6 +1670,7 @@ void CAppSettings::SaveSettings()
 	profile.WriteInt(IDS_R_SETTINGS, IDS_RS_AUDIOWINDOWMODE, nAudioWindowMode);
 	profile.WriteInt(IDS_R_SETTINGS, IDS_RS_COVER_ART_SIZE_LIMIT, nCoverArtSizeLimit);
 	profile.WriteBool(IDS_R_SETTINGS, IDS_RS_SHOW_YEAR, bShowYearInInfoBar);
+	profile.WriteBool(IDS_R_SETTINGS, IDS_RS_ADAPTIVE_THEME, bAdaptiveTheme);
 	profile.WriteInt(IDS_R_SETTINGS, IDS_RS_ADDSIMILARFILES, nAddSimilarFiles);
 	profile.WriteBool(IDS_R_SETTINGS, IDS_RS_ENABLEWORKERTHREADFOROPENING, fEnableWorkerThreadForOpening);
 	profile.WriteBool(IDS_R_SETTINGS, IDS_RS_REPORTFAILEDPINS, fReportFailedPins);

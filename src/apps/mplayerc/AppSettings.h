@@ -584,6 +584,7 @@ public:
 	int				nAudioWindowMode;
 	int				nCoverArtSizeLimit;
 	bool			bShowYearInInfoBar;
+	bool			bAdaptiveTheme;
 	int				nAddSimilarFiles;
 	bool			fEnableWorkerThreadForOpening;
 	bool			fReportFailedPins;

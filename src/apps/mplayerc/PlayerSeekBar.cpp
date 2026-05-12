@@ -359,6 +359,20 @@ void CPlayerSeekBar::OnPaint()
 				m_pMainFrame->m_BackGroundGradient.Paint(&memdc, r, 0, s.nThemeBrightness, m_crBackground.R, m_crBackground.G, m_crBackground.B);
 
 				rc = channelRect;
+			} else if (s.bAdaptiveTheme && m_pMainFrame->m_bCoverArtThemeValid) {
+				const COLORREF accent = m_pMainFrame->m_coverArtTheme.clrAccent;
+				TRIVERTEX tvAccent[2];
+				tvAccent[0].x = rc.left; tvAccent[0].y = rc.top;
+				tvAccent[0].Red   = COLOR16(GetRValue(accent) * 256);
+				tvAccent[0].Green = COLOR16(GetGValue(accent) * 256);
+				tvAccent[0].Blue  = COLOR16(GetBValue(accent) * 256);
+				tvAccent[0].Alpha = 0;
+				tvAccent[1].x = nposx; tvAccent[1].y = rc.bottom - 3;
+				tvAccent[1].Red   = COLOR16(std::min(255, GetRValue(accent) + 40) * 256);
+				tvAccent[1].Green = COLOR16(std::min(255, GetGValue(accent) + 40) * 256);
+				tvAccent[1].Blue  = COLOR16(std::min(255, GetBValue(accent) + 40) * 256);
+				tvAccent[1].Alpha = 0;
+				memdc.GradientFill(tvAccent, 2, &gr, 1, GRADIENT_FILL_RECT_V);
 			} else {
 				tvBackgroundEnabledLeft[0].x = rc.left; tvBackgroundEnabledLeft[0].y = rc.top;
 				tvBackgroundEnabledLeft[1].x = nposx; tvBackgroundEnabledLeft[1].y = rc.bottom - 3;

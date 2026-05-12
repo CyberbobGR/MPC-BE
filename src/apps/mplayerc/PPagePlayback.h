@@ -59,6 +59,7 @@ public:
 	BOOL		m_bPauseMinimizedVideo = FALSE;
 	int			m_nCoverArtSizeLimit = 600;
 	BOOL		m_bShowYearInInfoBar = TRUE;
+	BOOL		m_bAdaptiveTheme = FALSE;
 
 	enum { IDD = IDD_PPAGEPLAYBACK };
 

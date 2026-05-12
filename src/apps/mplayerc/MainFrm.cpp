@@ -4762,6 +4762,7 @@ void CMainFrame::OnFilePostCloseMedia()
 	}
 	m_strYear.Empty();
 	m_strTitleWithYear.Empty();
+	ResetCoverArtTheme();
 	m_wndStatsBar.RemoveAllLines();
 	m_wndStatusBar.Clear();
 	m_wndStatusBar.ShowTimer(false);
@@ -13427,6 +13428,121 @@ void CMainFrame::OpenSetupCaptureBar()
 		m_wndCaptureBar.m_capdlg.m_fAudPreview, false);
 }
 
+static COLORREF HSVtoRGB(float h, float s, float v)
+{
+	float c = v * s;
+	float x = c * (1.f - fabsf(fmodf(h / 60.f, 2.f) - 1.f));
+	float m = v - c;
+	float r = 0, g = 0, b = 0;
+	if      (h < 60)  { r = c; g = x; }
+	else if (h < 120) { r = x; g = c; }
+	else if (h < 180) {        g = c; b = x; }
+	else if (h < 240) {        g = x; b = c; }
+	else if (h < 300) { r = x;        b = c; }
+	else              { r = c;        b = x; }
+	return RGB(BYTE((r + m) * 255.f), BYTE((g + m) * 255.f), BYTE((b + m) * 255.f));
+}
+
+void CMainFrame::ExtractCoverArtColors()
+{
+	m_bCoverArtThemeValid = false;
+	if (!m_pMainBitmap || !AfxGetAppSettings().bAdaptiveTheme) {
+		return;
+	}
+
+	IWICImagingFactory* pFactory = CWICImagingFactory::GetInstance().GetFactory();
+	if (!pFactory) {
+		return;
+	}
+
+	// Scale down to 64x64 for fast processing
+	CComPtr<IWICBitmap> pSmall;
+	if (FAILED(WicCreateBitmapScaled(&pSmall, 64, 64, m_pMainBitmap))) {
+		return;
+	}
+
+	// Convert to 32bpp BGRA so we can read RGB easily
+	CComPtr<IWICFormatConverter> pConv;
+	if (FAILED(pFactory->CreateFormatConverter(&pConv))) {
+		return;
+	}
+	if (FAILED(pConv->Initialize(pSmall, GUID_WICPixelFormat32bppBGRA,
+			WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom))) {
+		return;
+	}
+
+	const UINT W = 64, H = 64;
+	std::vector<BYTE> px(W * H * 4);
+	if (FAILED(pConv->CopyPixels(nullptr, W * 4, (UINT)px.size(), px.data()))) {
+		return;
+	}
+
+	// Find the most vibrant pixel: highest saturation weighted by mid-range brightness
+	float bestScore = -1.f;
+	float accentH = 200.f, accentS = 0.6f, accentV = 0.6f;
+
+	for (UINT i = 0; i < W * H; i++) {
+		float b = px[i*4+0] / 255.f;
+		float g = px[i*4+1] / 255.f;
+		float r = px[i*4+2] / 255.f;
+
+		float mx = max(r, max(g, b));
+		float mn = min(r, min(g, b));
+		float delta = mx - mn;
+
+		if (mx < 0.08f || mx > 0.97f || delta < 0.06f) {
+			continue; // skip near-black, near-white, and grays
+		}
+
+		float sv = delta / mx; // saturation
+		float vv = mx;         // value
+
+		// score: prefer vivid colors in mid-brightness range
+		float score = sv * (1.f - fabsf(vv - 0.5f));
+		if (score > bestScore) {
+			bestScore = score;
+			float h = 0;
+			if      (mx == r) h = 60.f * fmodf((g - b) / delta, 6.f);
+			else if (mx == g) h = 60.f * ((b - r) / delta + 2.f);
+			else              h = 60.f * ((r - g) / delta + 4.f);
+			if (h < 0) h += 360.f;
+			accentH = h; accentS = sv; accentV = vv;
+		}
+	}
+
+	// Accent: vibrant, clamped to visible range
+	float aS = min(1.f, accentS * 1.15f);
+	float aV = max(0.62f, min(0.88f, accentV));
+	m_coverArtTheme.clrAccent  = HSVtoRGB(accentH, aS, aV);
+
+	// Backgrounds: same hue, very dark, low saturation
+	m_coverArtTheme.clrBg1     = HSVtoRGB(accentH, 0.30f, 0.11f);
+	m_coverArtTheme.clrBg2     = HSVtoRGB(accentH, 0.20f, 0.07f);
+
+	// Panel (info bar): slightly lighter than bg1
+	m_coverArtTheme.clrPanelBg = HSVtoRGB(accentH, 0.28f, 0.18f);
+
+	m_bCoverArtThemeValid = true;
+}
+
+void CMainFrame::ResetCoverArtTheme()
+{
+	m_bCoverArtThemeValid = false;
+	m_coverArtTheme = CoverArtTheme{};
+}
+
+void CMainFrame::RefreshAdaptiveTheme()
+{
+	if (AfxGetAppSettings().bAdaptiveTheme && m_pMainBitmap && m_bAudioOnly) {
+		ExtractCoverArtColors();
+	} else {
+		ResetCoverArtTheme();
+	}
+	m_wndView.Invalidate();
+	m_wndSeekBar.Invalidate();
+	m_wndInfoBar.Invalidate(TRUE);
+}
+
 void CMainFrame::RefreshYearInfoBar()
 {
 	const CAppSettings& s = AfxGetAppSettings();
@@ -20012,7 +20128,12 @@ HRESULT CMainFrame::SetAudioPicture(BOOL show)
 	}
 
 	m_wndView.ClearResizedImage();
+	ExtractCoverArtColors();
 	m_wndView.Invalidate();
+	if (m_bCoverArtThemeValid) {
+		m_wndSeekBar.Invalidate();
+		m_wndInfoBar.Invalidate();
+	}
 
 	return S_OK;
 }
