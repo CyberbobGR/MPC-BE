@@ -13486,8 +13486,8 @@ void CMainFrame::ExtractCoverArtColors()
 		float g = px[i*4+1] / 255.f;
 		float r = px[i*4+2] / 255.f;
 
-		float mx = max(r, max(g, b));
-		float mn = min(r, min(g, b));
+		float mx = std::max(r, std::max(g, b));
+		float mn = std::min(r, std::min(g, b));
 		float delta = mx - mn;
 
 		if (mx < 0.08f || mx > 0.97f || delta < 0.06f) {
@@ -13511,8 +13511,8 @@ void CMainFrame::ExtractCoverArtColors()
 	}
 
 	// Accent: vibrant, clamped to visible range
-	float aS = min(1.f, accentS * 1.15f);
-	float aV = max(0.62f, min(0.88f, accentV));
+	float aS = std::min(1.f, accentS * 1.15f);
+	float aV = std::max(0.62f, std::min(0.88f, accentV));
 	m_coverArtTheme.clrAccent  = HSVtoRGB(accentH, aS, aV);
 
 	// Backgrounds: same hue, very dark, low saturation
