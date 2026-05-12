@@ -126,7 +126,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 	if (m_bSelfDrawn) {
 		switch (pNMCD->dwDrawStage) {
-			case CDDS_PREPAINT:
+			case CDDS_PREPAINT: {
 				CMainFrame* pMainFrame = AfxGetMainFrame();
 				const bool bAdaptive = s.bAdaptiveTheme && pMainFrame && pMainFrame->m_bCoverArtThemeValid;
 				if (s.bUseDarkTheme && (m_bmUnderCtrl.GetSafeHandle() == nullptr
@@ -195,6 +195,7 @@ void CVolumeCtrl::OnNMCustomdraw(NMHDR* pNMHDR, LRESULT* pResult)
 					lr |= CDRF_NOTIFYPOSTPAINT;
 				}
 				break;
+			}
 
 			case CDDS_ITEMPREPAINT:
 			case CDDS_POSTPAINT:
