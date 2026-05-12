@@ -475,6 +475,9 @@ private:
 
 	BOOL			m_bNextIsOpened = FALSE;
 
+	CString			m_strYear;
+	CString			m_strTitleWithYear;
+
 	CString					m_LastOpenFile;
 	std::unique_ptr<OpenMediaData> m_lastOMD;
 

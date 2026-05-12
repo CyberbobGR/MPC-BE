@@ -583,6 +583,7 @@ public:
 	bool			bRememberSelectedTracks;
 	int				nAudioWindowMode;
 	int				nCoverArtSizeLimit;
+	bool			bShowYearInInfoBar;
 	int				nAddSimilarFiles;
 	bool			fEnableWorkerThreadForOpening;
 	bool			fReportFailedPins;

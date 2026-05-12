@@ -1532,6 +1532,13 @@ LPCWSTR CMainFrame::GetTextForBar(int style)
 		return GetFileNameOrTitleOrPath();
 	}
 	if (style == TEXTBAR_TITLE) {
+		if (m_wndInfoBar.IsWindowVisible()) {
+			return L"";
+		}
+		const CAppSettings& s = AfxGetAppSettings();
+		if (s.bShowYearInInfoBar && !m_strTitleWithYear.IsEmpty()) {
+			return m_strTitleWithYear.GetString();
+		}
 		return GetTitleOrFileNameOrPath();
 	}
 	if (style == TEXTBAR_FULLPATH) {
@@ -4753,6 +4760,8 @@ void CMainFrame::OnFilePostCloseMedia()
 	if (!m_bNextIsOpened) {
 		m_wndInfoBar.RemoveAllLines();
 	}
+	m_strYear.Empty();
+	m_strTitleWithYear.Empty();
 	m_wndStatsBar.RemoveAllLines();
 	m_wndStatusBar.Clear();
 	m_wndStatusBar.ShowTimer(false);
@@ -13519,6 +13528,7 @@ void CMainFrame::OpenSetupInfoBar()
 		}
 
 		// Year: try IDSMPropertyBag (MP3/FLAC/Matroska etc.) then IWMHeaderInfo (WMA)
+		m_strYear.Empty();
 		if (m_pGB) {
 			BeginEnumFilters(m_pGB, pEF, pBF) {
 				if (!CheckMainFilter(pBF)) {
@@ -13528,9 +13538,9 @@ void CMainFrame::OpenSetupInfoBar()
 				if (CComQIPtr<IDSMPropertyBag> pPB = pBF.p) {
 					CComBSTR bstrYear;
 					if (SUCCEEDED(pPB->GetProperty(L"YEAR", &bstrYear)) && bstrYear.Length()) {
-						m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), CString(bstrYear));
+						m_strYear = CString(bstrYear);
 					} else if (SUCCEEDED(pPB->GetProperty(L"DATE", &bstrYear)) && bstrYear.Length()) {
-						m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), CString(bstrYear));
+						m_strYear = CString(bstrYear);
 					}
 					break;
 				}
@@ -13543,14 +13553,24 @@ void CMainFrame::OpenSetupInfoBar()
 							&& type == WMT_TYPE_STRING && length > sizeof(wchar_t)) {
 						std::vector<BYTE> value(length);
 						if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, value.data(), &length))) {
-							CStringW str((LPCWSTR)value.data(), length / sizeof(wchar_t));
-							m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), str);
+							m_strYear = CStringW((LPCWSTR)value.data(), length / sizeof(wchar_t));
 						}
 					}
 					break;
 				}
 			}
 			EndEnumFilters;
+		}
+
+		{
+			const CAppSettings& s = AfxGetAppSettings();
+			if (s.bShowYearInInfoBar && !m_strYear.IsEmpty()) {
+				m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), m_strYear);
+				CString title = GetTitleOrFileNameOrPath();
+				m_strTitleWithYear.Format(L"%s (%s)", title, m_strYear);
+			} else {
+				m_strTitleWithYear.Empty();
+			}
 		}
 
 		if (filled) {

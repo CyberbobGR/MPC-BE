@@ -837,8 +837,8 @@
 #define IDS_INFOBAR_VIDEO               14177
 #define IDS_INFOBAR_AUDIO               14178
 #define IDS_INFOBAR_SUBTITLES           14179
-#define IDS_INFOBAR_YEAR                14180
 #define IDS_CONTROLS_COMPLETING         14180
+#define IDS_INFOBAR_YEAR                14187
 #define IDS_AUTOPLAY_PLAYVIDEO          14181
 #define IDS_AUTOPLAY_PLAYMUSIC          14182
 #define IDS_AUTOPLAY_PLAYAUDIOCD        14183
@@ -1807,7 +1807,8 @@
 #define IDS_AG_WINDOW_TO_PRIMARYSCREEN  44102
 #define IDS_EXTERNAL                    44103
 #define IDS_SUB_SAVE_EXTERNAL_STYLE_FILE 44104
-#define IDC_EDIT_COVER_ART_SIZE         22054
+#define IDC_EDIT_COVER_ART_SIZE         22071
+#define IDC_CHECK_SHOW_YEAR             22072
 
 // Next default values for new objects
 //
@@ -1815,7 +1816,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        44105
 #define _APS_NEXT_COMMAND_VALUE         1204
-#define _APS_NEXT_CONTROL_VALUE         22055
+#define _APS_NEXT_CONTROL_VALUE         22073
 #define _APS_NEXT_SYMED_VALUE           24044
 #endif
 #endif
