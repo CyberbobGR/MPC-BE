@@ -578,11 +578,11 @@ void SetID3TagProperties(IBaseFilter* pBF, const CID3Tag* pID3tag)
 		if (title.IsEmpty() && (Lookup('TIT2', str) || Lookup('\0TT2', str))) {
 			title = str;
 		}
-		if (Lookup('TYER', str) && !title.IsEmpty() && !str.IsEmpty()) {
-			title += L" (" + str + L")";
-		}
 		if (!title.IsEmpty()) {
 			pPB->SetProperty(L"TITL", title);
+		}
+		if (Lookup('TYER', str) && !str.IsEmpty()) {
+			pPB->SetProperty(L"YEAR", str);
 		}
 
 		if (author.IsEmpty() && (Lookup('TPE1', str) || Lookup('\0TP1', str))) {

@@ -4750,7 +4750,9 @@ void CMainFrame::OnFilePostCloseMedia()
 	m_wndSeekBar.SetRange(0);
 	m_wndSeekBar.SetPos(0);
 	m_wndSeekBar.RemoveChapters();
-	m_wndInfoBar.RemoveAllLines();
+	if (!m_bNextIsOpened) {
+		m_wndInfoBar.RemoveAllLines();
+	}
 	m_wndStatsBar.RemoveAllLines();
 	m_wndStatusBar.Clear();
 	m_wndStatusBar.ShowTimer(false);
@@ -13418,6 +13420,8 @@ void CMainFrame::OpenSetupCaptureBar()
 
 void CMainFrame::OpenSetupInfoBar()
 {
+	m_wndInfoBar.RemoveAllLines();
+
 	if (GetPlaybackMode() == PM_FILE) {
 		HRESULT hr = E_NOT_SET;
 		bool filled = false;
@@ -13512,6 +13516,41 @@ void CMainFrame::OpenSetupInfoBar()
 		if (!m_youtubeFields.title.IsEmpty()) {
 			m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_TITLE), m_youtubeFields.title);
 			filled = true;
+		}
+
+		// Year: try IDSMPropertyBag (MP3/FLAC/Matroska etc.) then IWMHeaderInfo (WMA)
+		if (m_pGB) {
+			BeginEnumFilters(m_pGB, pEF, pBF) {
+				if (!CheckMainFilter(pBF)) {
+					continue;
+				}
+
+				if (CComQIPtr<IDSMPropertyBag> pPB = pBF.p) {
+					CComBSTR bstrYear;
+					if (SUCCEEDED(pPB->GetProperty(L"YEAR", &bstrYear)) && bstrYear.Length()) {
+						m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), CString(bstrYear));
+					} else if (SUCCEEDED(pPB->GetProperty(L"DATE", &bstrYear)) && bstrYear.Length()) {
+						m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), CString(bstrYear));
+					}
+					break;
+				}
+
+				if (CComQIPtr<IWMHeaderInfo> pWMHI = pBF.p) {
+					WORD streamNum = 0;
+					WMT_ATTR_DATATYPE type;
+					WORD length;
+					if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, nullptr, &length))
+							&& type == WMT_TYPE_STRING && length > sizeof(wchar_t)) {
+						std::vector<BYTE> value(length);
+						if (SUCCEEDED(pWMHI->GetAttributeByName(&streamNum, L"WM/Year", &type, value.data(), &length))) {
+							CStringW str((LPCWSTR)value.data(), length / sizeof(wchar_t));
+							m_wndInfoBar.SetLine(ResStr(IDS_INFOBAR_YEAR), str);
+						}
+					}
+					break;
+				}
+			}
+			EndEnumFilters;
 		}
 
 		if (filled) {

@@ -837,6 +837,7 @@
 #define IDS_INFOBAR_VIDEO               14177
 #define IDS_INFOBAR_AUDIO               14178
 #define IDS_INFOBAR_SUBTITLES           14179
+#define IDS_INFOBAR_YEAR                14180
 #define IDS_CONTROLS_COMPLETING         14180
 #define IDS_AUTOPLAY_PLAYVIDEO          14181
 #define IDS_AUTOPLAY_PLAYMUSIC          14182

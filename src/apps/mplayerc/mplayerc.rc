@@ -2345,6 +2345,7 @@ BEGIN
     IDS_INFOBAR_VIDEO       "Video"
     IDS_INFOBAR_AUDIO       "Audio"
     IDS_INFOBAR_SUBTITLES   "Subtitles"
+    IDS_INFOBAR_YEAR        "Year"
     IDS_CONTROLS_COMPLETING "Completing..."
     IDS_AUTOPLAY_PLAYVIDEO  "Play Video"
     IDS_AUTOPLAY_PLAYMUSIC  "Play Music"
